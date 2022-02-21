@@ -4,11 +4,11 @@ source("R/00_setup.R")
 library(pdftools)
 library(tidytext)
 library(stm)
-# library(tesseract)
-# library(quanteda)
 library(ggthemes)
 library(furrr)
 plan(multisession)
+
+result <- qs::qread("output/result.qs")
 
 
 # Convert PDF to TXT ------------------------------------------------------
@@ -18,7 +18,7 @@ reports <-
              full.names = TRUE) |> 
   str_subset("report.pdf$")
   
-text_list <- 
+text <- 
   map_dfr(reports, ~{
   tibble(project = str_extract(.x, "^pdf/[:digit:]*_") |> 
            str_remove("^pdf/") |> 
@@ -29,8 +29,8 @@ text_list <-
 
 # Tokenize texts ----------------------------------------------------------
 
-tidy_text_list <- 
-  text_list |> 
+text <- 
+  text |> 
   unnest_tokens(word, text) |> 
   mutate(word = if_else(str_detect(word, "’|'|‘"), 
                         str_extract(word, ".+(?=(’|'|‘))"), word)) |> 
@@ -47,13 +47,64 @@ stop_words_mtl <-
   str_split("-") |> 
   unlist() |> 
   unique() |> 
-  c("doc", "montréal", "ville", "consultation", "publique", "office", "projet",
-    "grâce", "côte", "hubert", "villeray", "rené", "lévesque", "hochelaga",
+  setdiff("") |> 
+  c(text |> 
+      count(word, sort = TRUE) |> 
+      slice(1:20) |> 
+      pull(word)) |> 
+  c("grâce", "côte", "hubert", "villeray", "rené", "lévesque", "hochelaga",
     "mercier")
 
-tidy_text_list <- 
-  tidy_text_list |> 
+text <- 
+  text |> 
   filter(!word %in% stop_words_mtl)
+
+
+# Sentiment analysis ------------------------------------------------------
+
+sentiment <- read_delim("data/FEEL.csv", ";")
+
+text |> 
+  inner_join(sentiment, by = "word") |> 
+  group_by(project) |> 
+  summarize(sentiment = (
+    sum(polarity == "positive") - sum(polarity == "negative")) / n()) |> 
+  ggplot(aes(sentiment)) +
+  geom_histogram()
+
+text |> 
+  inner_join(sentiment, by = "word") |> 
+  count(word, polarity, sort = TRUE)
+
+text |> 
+  inner_join(sentiment, by = "word") |> 
+  group_by(project) |> 
+  summarize(sentiment = (
+    sum(polarity == "positive") - sum(polarity == "negative")) / n()) |> 
+  mutate(id = as.integer(project)) |> 
+  inner_join(result, by = "id") |> 
+  filter(date >= "2005-01-01") |> 
+  ggplot(aes(date, sentiment)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_minimal()
+
+
+# tf-idf ------------------------------------------------------------------
+
+tf_idf <- 
+  text |> 
+  count(project, word) |> 
+  bind_tf_idf(word, project, n)
+
+tf_idf |> 
+  arrange(-tf_idf)
+
+
+
+
+
+
 
 # Join with sustainability dictionary -------------------------------------
 
@@ -63,7 +114,7 @@ dict <-
   filter(!is.na(word), !is.na(category))
 
 word_pct <- 
-  tidy_text_list |> 
+  text |> 
   group_by(project) |> 
   summarize(
     total = n(),
@@ -83,12 +134,12 @@ result_word <-
   inner_join(word_pct, by = c("id" = "project"))
 
 result_cat <-
-  tidy_text_list |> 
+  text |> 
   group_by(project) |> 
   summarize(total = n()) |> 
   bind_cols({
     map_dfc(unique(dict$category), ~{
-      tidy_text_list |> 
+      text |> 
         group_by(project) |> 
         summarize(tot = sum(word %in% dict[dict$category == .x,]$word)) |> 
         select(-project) |> 
@@ -106,6 +157,7 @@ result_cat <-
 
 # Number of words over time
 result_word |> 
+  # filter(date >= "2005-01-01") |>
   ggplot(aes(date, total)) +
   geom_point() +
   geom_smooth(method = "lm") +
@@ -113,7 +165,7 @@ result_word |>
 
 # Sustainability words over time
 result_word |> 
-  # filter(date >= "2005-01-01") |> 
+  # filter(date >= "2005-01-01") |>
   ggplot(aes(date, sus_pct)) +
   geom_point() +
   geom_smooth(method = "lm") +
@@ -121,7 +173,7 @@ result_word |>
 
 # Green words over time
 result_word |> 
-  # filter(date >= "2005-01-01") |> 
+  filter(date >= "2005-01-01") |>
   ggplot(aes(date, green_pct)) +
   geom_point() +
   geom_smooth(method = "lm") +
@@ -129,7 +181,7 @@ result_word |>
 
 # Grey words over time
 result_word |> 
-  # filter(date >= "2005-01-01") |> 
+  filter(date >= "2005-01-01") |>
   ggplot(aes(date, grey_pct)) +
   geom_point() +
   geom_smooth(method = "lm") +
@@ -158,33 +210,33 @@ result_word |>
 
 ### Exploratory visualizations #################################################
 
-# tf_idf <-
-#   tidy_text_list |> 
-#   count(project, word, sort = TRUE) |> 
-#   bind_tf_idf(word, project, n) |> 
-#   arrange(-tf_idf) |> 
-#   group_by(project) |> 
-#   top_n(10) |> 
-#   ungroup()
-# 
-# figure_1 <-
-#   tf_idf %>%
-#   filter(city %in% c("Palm Springs", "Santa Cruz", "Colma", "Berkeley", 
-#                      "Duarte", "Redwood City")) %>% 
-#   mutate(word = reorder_within(word, tf_idf, city)) %>%
-#   ggplot(aes(word, tf_idf, fill = city)) +
-#   geom_col(alpha = 0.8, show.legend = FALSE) +
-#   facet_wrap(~ city, scales = "free", ncol = 3) +
-#   scale_fill_brewer(palette = "Set2") +
-#   scale_x_reordered() +
-#   coord_flip() +
-#   theme_minimal() +
-#   theme(strip.text=element_text(size=11),
-#         text = element_text(family = "Futura"),
-#         plot.title = element_text(family = "Futura", face = "bold", 
-#                                   hjust = 0.5)) +
-#   labs(x = NULL, y = "tf-idf",
-#        title = "Highest tf-idf words in climate action plans")
+tf_idf <-
+  text |>
+  count(project, word, sort = TRUE) |>
+  bind_tf_idf(word, project, n) |>
+  arrange(-tf_idf) |>
+  group_by(project) |>
+  top_n(10) |>
+  ungroup()
+
+figure_1 <-
+  tf_idf %>%
+  # filter(city %in% c("Palm Springs", "Santa Cruz", "Colma", "Berkeley",
+  #                    "Duarte", "Redwood City")) %>%
+  mutate(word = reorder_within(word, tf_idf, city)) %>%
+  ggplot(aes(word, tf_idf, fill = city)) +
+  geom_col(alpha = 0.8, show.legend = FALSE) +
+  facet_wrap(~ city, scales = "free", ncol = 3) +
+  scale_fill_brewer(palette = "Set2") +
+  scale_x_reordered() +
+  coord_flip() +
+  theme_minimal() +
+  theme(strip.text=element_text(size=11),
+        text = element_text(family = "Futura"),
+        plot.title = element_text(family = "Futura", face = "bold",
+                                  hjust = 0.5)) +
+  labs(x = NULL, y = "tf-idf",
+       title = "Highest tf-idf words in climate action plans")
 # 
 # ggsave("output/figure_1.pdf", plot = figure_1, width = 10, height = 5, 
 #        units = "in", useDingbats = FALSE)
@@ -194,12 +246,12 @@ result_word |>
 ### Topic model ################################################################
 
 dfm <- 
-  tidy_text_list |> 
+  text |> 
   count(project, word, sort = TRUE) |> 
   cast_dfm(project, word, n)
 
 df_sparse <- 
-  tidy_text_list |> 
+  text |> 
   count(project, word, sort = TRUE) |> 
   cast_sparse(project, word, n)
 
@@ -252,7 +304,7 @@ td_gamma <- tidy(topic_model, matrix = "gamma", document_names = rownames(dfm))
 ### Many models ################################################################
 
 df_sparse <- 
-  tidy_text_list %>% 
+  text %>% 
   add_count(word) %>% 
   filter(n > 100) %>% 
   select(-n) %>% 
@@ -280,7 +332,7 @@ k_result <-
          iterations = map_dbl(topic_model, 
                               function(x) length(x$convergence$bound)))
 
-figure_4 <- 
+# figure_4 <- 
   k_result %>%
   transmute(K,
             `Lower bound` = lbound,
@@ -307,7 +359,7 @@ figure_4 <-
 ### Final topic model ##########################################################
 
 topic_model <- k_result %>% 
-  filter(K == 70) %>% 
+  filter(K == 100) %>% 
   pull(topic_model) %>% 
   .[[1]]
 

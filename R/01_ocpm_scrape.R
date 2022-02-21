@@ -4,6 +4,7 @@
 
 library(tidyverse)
 library(rvest)
+library(sf)
 
 
 # Get list of completed consultations -------------------------------------
@@ -122,6 +123,33 @@ for (i in 1:length(urls)) {
   qs::qsave(result, file = "output/result.qs")
   
 }
+
+
+# Add coordinates ---------------------------------------------------------
+
+coordinates <- 
+  read_csv("data/coordinates.csv") |> 
+  tidyr::separate(Project, c("id", "title"), "_") |> 
+  mutate(id = as.integer(id))
+
+coordinates |> 
+  anti_join(result, by = "title") |> 
+  pull(title)
+
+result <- 
+  result |> 
+  select(-id) |> 
+  inner_join(coordinates, by = "title") |> 
+  relocate(id) |> 
+  mutate(across(c(Latitude:Longitude), 
+                ~as.numeric(if_else(.x == "N/A", NA_character_, .x))),
+         Address = if_else(Address == "N/A", NA_character_, Address)) |> 
+  rename(lat = Latitude, lon = Longitude, large = `Large project`, 
+         address = Address) |> 
+  mutate(large = if_else(large == "N/A", NA_character_, large),
+         large = if_else(large == 1, TRUE, FALSE))
+
+qs::qsave(result, file = "output/result.qs")
 
 
 # Save problems for future analysis ---------------------------------------

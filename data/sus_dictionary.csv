@@ -1,0 +1,295 @@
+Mots,vert_gris,Catégorie
+valide,gris,accessibilité
+accessibilité,gris,accessibilité
+accessible,gris,accessibilité
+vie active,gris,accessibilité
+transport actif,gris,accessibilité
+bicyclette,gris,accessibilité
+vélo,gris,accessibilité
+cycliste,gris,accessibilité
+cyclisme,gris,accessibilité
+bus,gris,accessibilité
+borne de recharge,gris,accessibilité
+station de recharge,gris,accessibilité
+proche,gris,accessibilité
+trajet,gris,accessibilité
+cycliste,gris,accessibilité
+handicapé,gris,accessibilité
+centre-ville,gris,accessibilité
+ascenseur,gris,accessibilité
+EXO,gris,accessibilité
+épicerie,gris,accessibilité
+lieu,gris,accessibilité
+emplacement,gris,accessibilité
+localisation,gris,accessibilité
+métro,gris,accessibilité
+proche,gris,accessibilité
+à proximité,gris,accessibilité
+près de,gris,accessibilité
+sentier ,gris,accessibilité
+chemin,gris,accessibilité
+sentiers,gris,accessibilité
+chemins,gris,accessibilité
+transport en commun,gris,accessibilité
+REM,gris,accessibilité
+sûreté,gris,accessibilité
+sécurité,gris,accessibilité
+magasin,gris,accessibilité
+magasinage,gris,accessibilité
+shopping,gris,accessibilité
+escaliers,gris,accessibilité
+station,gris,accessibilité
+commerce,gris,accessibilité
+magasin,gris,accessibilité
+boutique,gris,accessibilité
+commerces,gris,accessibilité
+magasins,gris,accessibilité
+boutiques,gris,accessibilité
+train,gris,accessibilité
+transit,gris,accessibilité
+transport,gris,accessibilité
+transport,gris,accessibilité
+marche,gris,accessibilité
+marcher,gris,accessibilité
+accessibilité piétonnière,gris,accessibilité
+marchabilité,gris,accessibilité
+piétonnier,gris,accessibilité
+accessible à pied,gris,accessibilité
+marcher,gris,accessibilité
+fauteuil roulant,gris,accessibilité
+travail,gris,accessibilité
+travailler,gris,accessibilité
+abordable,gris,économique
+rentable,gris,économique
+désinvestissement,gris,économique
+économique,gris,économique
+économie,gris,économique
+faible coût,gris,économique
+faible revenu,gris,économique
+à but non lucratif,gris,économique
+prospérité,gris,économique
+responsable,gris,économique
+subventionné,gris,économique
+valeur,gris,économique
+CFL,gris,énergie
+efficacité,gris,énergie
+performance,gris,énergie
+efficace,gris,énergie
+performant,gris,énergie
+électrique,gris,énergie
+électrique,gris,énergie
+électricité,gris,énergie
+énergie,gris,énergie
+energy star,gris,énergie
+énergie verte,gris,énergie
+haute efficacité ,gris,énergie
+haut rendement,gris,énergie
+haute performance,gris,énergie
+isolé,gris,énergie
+isolation,gris,énergie
+LED,gris,énergie
+renouvelable,gris,énergie
+solaire,gris,énergie
+panneaux solaires,gris,énergie
+vent,gris,énergie
+éolienne,gris,énergie
+éoliennes,gris,énergie
+biodiversité,vert,environnement
+canal,vert,environnement
+climat,vert,environnement
+écologie,vert,environnement
+environnement,vert,environnement
+empreinte,gris,environnement
+forêt,vert,environnement
+forêts,vert,environnement
+gazon,vert,environnement
+herbe,vert,environnement
+toiture verte,vert,environnement
+toit vert,vert,environnement
+toit végétal,vert,environnement
+espace vert,vert,environnement
+verdi,vert,environnement
+plus vert ,vert,environnement
+plus écologique,vert,environnement
+émissions de GES,gris,environnement
+émissions de gaz à effet de serre,gris,environnement
+verdissement,vert,environnement
+espace vert,vert,environnement
+paysagé,vert,environnement
+paysagement,vert,environnement
+aménagement paysager,vert,environnement
+pelouse,vert,environnement
+local,gris,environnement
+atténuer,gris,environnement
+naturel,vert,environnement
+nature,vert,environnement
+parc,vert,environnement
+parcs,vert,environnement
+plante,vert,environnement
+plantes,vert,environnement
+pollution,gris,environnement
+réduction,gris,environnement
+rivière ,vert,environnement
+fleuve,vert,environnement
+température,gris,environnement
+arbre,vert,environnement
+arbres,vert,environnement
+végétation,vert,environnement
+eau,vert,environnement
+faune,vert,environnement
+responsabilité,gris,jargon
+responsable,gris,jargon
+adaptation,gris,jargon
+empreinte carbone,gris,jargon
+carboneutre,gris,jargon
+neutre en carbone,gris,jargon
+cohabiter,vert,jargon
+cohabitation (/vivre-ensemble?),vert,jargon
+coexistence,vert,jargon
+vivre-ensemble,vert,jargon
+cradle to cradle,gris,jargon
+décarbonisation,gris,jargon
+éco,gris,jargon
+éco-responsable ,gris,jargon
+respectueux de l'environnement,gris,jargon
+équilibre,gris,jargon
+vert,vert,jargon
+bâtiment vert ,gris,jargon
+bâtiment écologique,gris,jargon
+construction verte,gris,jargon
+harmonie,vert,jargon
+holistique,gris,jargon
+LEED,gris,jargon
+net zéro ,gris,jargon
+zéro émission,gris,jargon
+oasis,vert,jargon
+offsets,gris,jargon
+maison passive,gris,jargon
+foyer passif,gris,jargon
+réduire,gris,jargon
+réduction,gris,jargon
+résilience,gris,jargon
+résilient,gris,jargon
+responsabilité,gris,jargon
+responsable,gris,jargon
+restauration lente,gris,jargon
+alimentation lente,gris,jargon
+développement durable,gris,jargon
+durabilité,gris,jargon
+durable,gris,jargon
+transparence,gris,jargon
+transparent,gris,jargon
+biodégradable,gris,matériaux_déchets
+biodégradation,gris,matériaux_déchets
+bioplastique,gris,matériaux_déchets
+bioplastiques,gris,matériaux_déchets
+produit chimique,gris,matériaux_déchets
+produits chimiques,gris,matériaux_déchets
+compost,gris,matériaux_déchets
+compostable,gris,matériaux_déchets
+compostage,gris,matériaux_déchets
+crédibilité,gris,matériaux_déchets
+crédible,gris,matériaux_déchets
+due process,gris,matériaux_déchets
+émission,gris,matériaux_déchets
+émissions,gris,matériaux_déchets
+faible teneur en COV,gris,matériaux_déchets
+faible débit,gris,matériaux_déchets
+matériau ,gris,matériaux_déchets
+matières,gris,matériaux_déchets
+matériaux ,gris,matériaux_déchets
+eau de pluie,vert,matériaux_déchets
+eaux pluviales,vert,matériaux_déchets
+recycler,gris,matériaux_déchets
+recyclage,gris,matériaux_déchets
+rénover,gris,matériaux_déchets
+bâtiment régénératif ,gris,matériaux_déchets
+bâtiment régénérateur,gris,matériaux_déchets
+ressource,gris,matériaux_déchets
+ressources,gris,matériaux_déchets
+fournisseurs responsables,gris,matériaux_déchets
+rénovation,gris,matériaux_déchets
+fournisseurs durables,gris,matériaux_déchets
+upcycle,gris,matériaux_déchets
+upcycled,gris,matériaux_déchets
+upcycling,gris,matériaux_déchets
+ventilation,gris,matériaux_déchets
+COV,gris,matériaux_déchets
+déchets,gris,matériaux_déchets
+zéro COV,gris,matériaux_déchets
+zéro déchets,gris,matériaux_déchets
+justice climatique,gris,social
+commun,gris,social
+communautés,gris,social
+collectivités,gris,social
+communauté,gris,social
+collectivité,gris,social
+coop,gris,social
+coopérer,gris,social
+coopérer,gris,social
+coopération,gris,social
+coopérative,gris,social
+culturel,gris,social
+culture,gris,social
+cultures,gris,social
+dense,gris,social
+densité,gris,social
+divers,gris,social
+diversité,gris,social
+éthique,gris,social
+éthique,gris,social
+juste ,gris,social
+équitable,gris,social
+commerce équitable,gris,social
+familles,gris,social
+famille,gris,social
+inclusif,gris,social
+inclusive,gris,social
+mélange,gris,social
+mixité,gris,social
+programme,gris,social
+programmes,gris,social
+partager,gris,social
+partagé,gris,social
+partager,gris,social
+social,gris,social
+socialiser,gris,social
+société,gris,social
+connecté,gris,technologique
+connectivité,gris,technologique
+innovation,gris,technologique
+innovant,gris,technologique
+novateur,gris,technologique
+bâtiment durable,gris,technologique
+smart building,gris,technologique
+smart city,gris,technologique
+réseau intelligent ,gris,technologique
+de la ferme à la table,vert,alimentation
+désert alimentaire,gris,alimentation
+sécurité alimentaire,gris,alimentation
+sécurité alimentaire,gris,alimentation
+jardin,vert,alimentation
+biologique,vert,alimentation
+à base de plantes,vert,alimentation
+végétalien,vert,alimentation
+vegan,vert,alimentation
+végétarien,vert,alimentation
+circulation,,
+congestion,,
+écologique ,,
+densification,,
+équipement,,
+transport collectif ,,
+qualité de vie,,
+qualité de l'air,,
+échelle humaine,,
+convivialité,,
+convivial,,
+agriculture urbaine,,
+îlots de chaleur,,
+aménagement paysager,,
+énergies alternatives ,,
+mixte ,,
+écoquartier ,,
+communautaire,,
+TOD,,
