@@ -1,6 +1,7 @@
 #### 00 SETUP ##################################################################
 
 library(tidyverse)
+library(sf)
 
 # https://github.com/stopwords-iso/stopwords-fr/blob/master/stopwords-fr.txt
 stop_words_fr <- c(

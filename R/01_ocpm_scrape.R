@@ -31,14 +31,15 @@ result <- tibble(
   title = NA_character_,
   date = as.Date(NA_character_),
   report = NA,
-  sections = vector("list", length(urls)))
+  headings = vector("list", length(urls)),
+  documents = vector("list", length(urls)))
 
 # result <- qs::qread("output/result.qs")
 
 
 # Loop through URLs -------------------------------------------------------
 
-for (i in 1:length(urls)) {
+for (i in 2:length(urls)) {
   
   print(paste0(i, ": ", substr(Sys.time(), 12, 16)))
   
@@ -83,8 +84,8 @@ for (i in 1:length(urls)) {
       html_element(xpath = 'title') |> 
       html_text()} == "| OCPM") next
 
-  # Get list of sections  
-  result[i,]$sections <- 
+  # Get headings and documents
+  result[i,]$headings <- 
     docs |> 
     html_element(xpath = "body") |> 
     html_element(xpath = "div[2]") |> 
@@ -94,9 +95,32 @@ for (i in 1:length(urls)) {
     html_element(xpath = "div") |> 
     html_element(xpath = "div") |> 
     html_element(xpath = "div") |> 
+    html_elements(xpath = "//h2") |> 
     html_text() |> 
-    str_remove_all("\n") |> 
+    str_trim() |> 
     str_squish() |> 
+    str_subset("Table des matières|S'inscrire à l'infolettre|Nous contacter", 
+               negate = TRUE) |> 
+    (\(x) paste(seq_along(x), x))() |> 
+    list()
+  
+  result[i,]$documents <- 
+    docs |> 
+    html_element(xpath = "body") |> 
+    html_element(xpath = "div[2]") |> 
+    html_element(xpath = "section[2]") |> 
+    html_element(xpath = "div[3]") |> 
+    html_element(xpath = "div") |> 
+    html_element(xpath = "div") |> 
+    html_element(xpath = "div") |> 
+    html_element(xpath = "div") |> 
+    html_elements(xpath = "//ul") |> 
+    html_elements(xpath = "li") |> 
+    html_text() |> 
+    str_trim() |> 
+    str_squish() |> 
+    str_subset(".+") |> 
+    (\(x) x[-c(1:3)])() |> 
     list()
   
   # Get document URLs
@@ -115,12 +139,12 @@ for (i in 1:length(urls)) {
   
   # Download files, 50 at a time
   it <- ceiling(length(doc_urls) / 50)
-  for (j in seq_along(it)) {
+  for (j in seq_len(it)) {
     range <- ((j - 1) * 50 + 1):min(j * 50, length(dest_paths))
     download.file(doc_urls[range], dest_paths[range], quiet = TRUE)
   }
   
-  qs::qsave(result, file = "output/result.qs")
+  qs::qsave(result, file = "output/result_raw.qs")
   
 }
 
@@ -131,10 +155,6 @@ coordinates <-
   read_csv("data/coordinates.csv") |> 
   tidyr::separate(Project, c("id", "title"), "_") |> 
   mutate(id = as.integer(id))
-
-coordinates |> 
-  anti_join(result, by = "title") |> 
-  pull(title)
 
 result <- 
   result |> 
