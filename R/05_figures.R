@@ -21,8 +21,14 @@ bigram |>
 
 text |> 
   filter(id == 5) |> 
-  select(id, word, green_grey, category, climate, polarity) |> 
-  mutate(green_grey = if_else(green_grey == "gris", "grey", green_grey))
+  select(id, word, sustainability = green_grey, category, climate, polarity) |> 
+  mutate(sustainability = if_else(!is.na(sustainability), TRUE, FALSE)) |> 
+  group_by(sustainability, category, climate, polarity) |> 
+  slice(1) |> 
+  ungroup() |> 
+  slice(3:25) |> 
+  mutate(sustainability = if_else(word == "climatique", TRUE, sustainability),
+         category = if_else(word == "climatique", "environnement", category))
 
 
 # Topic model example -----------------------------------------------------
