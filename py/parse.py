@@ -146,9 +146,9 @@ def split_hearings_by_sentence(hearing_tuples):
       sents.extend(add_sentences(doc, lang, h[0]))
   return sents
 
-def save_sents(sents):
+def save_sents(sents, fn):
   df = pd.DataFrame(sents, columns=['speaker', 'sentence', 'lang'])
-  df.to_csv("data/text_report.csv")
+  df.to_csv(f"data/{fn}.csv")
 
 def split_letters_reports_by_sentence(text, text_type='LETTER'):
   lang = detect_lang(text)
@@ -161,10 +161,10 @@ def split_letters_reports_by_sentence(text, text_type='LETTER'):
   return sents
 
 l_sents = split_letters_reports_by_sentence(letter_text)
-save_sents(l_sents)
+save_sents(l_sents, 'letters')
 
 r_sents = split_letters_reports_by_sentence(report_text, text_type='REPORT')
-save_sents(r_sents)
+save_sents(r_sents, 'reports')
 
 h_sents = split_hearings_by_sentence(hearing_tuples)
-save_sents(h_sents)
+save_sents(h_sents, 'hearings')
