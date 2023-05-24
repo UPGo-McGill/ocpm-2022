@@ -49,18 +49,22 @@ def read_report(REPORT_PATH):
         pdf = pdftotext.PDF(f)
 
   # All pages
-  pages = []
+  pages = ""
   for idx, page in enumerate(pdf):
+    lines = []
     #page = re.sub(r'^\s*([0-9]+\s*)+$','\n',page, flags=re.M)
     page = re.sub(r'(\n){2,}','\r\n', page)
     page = re.sub(r'^[A-Z\d\W]+$[\r]*', '', page, flags=re.MULTILINE)
     page = re.sub(r"(?<=[a-z])\n(?=[a-z])", '', page)
-    line_regex = re.compile("([a-z])\s\s([a-z])", flags=re.IGNORECASE|re.MULTILINE)
     page = remove_toc(page)
     page = re.sub(r'http\S+', '', page)
     page = remove_linebreaks(page)
-    pages.append(page)
-  return " ".join(pages)
+    clean_page = ""
+    for line in page.splitlines():
+      if not line.endswith("doc."):
+          clean_page += line + '\n'
+    pages += clean_page
+  return pages
 
 def read_letter_text(LETTER_PATH):
     """
@@ -129,6 +133,8 @@ def add_sentences(doc, lang, idx=''):
   doc_sents = []
   for s in doc.sents:
     if len(s) > 5:
+      #if not s.text.endswith('doc.'):
+      #  print(s)
       doc_sents.append((idx, s, lang))
     else:
       pass
@@ -155,16 +161,20 @@ def split_letters_reports_by_sentence(text, text_type='LETTER'):
   if lang == 'fr':
     doc = nlp_fr(text)
     sents = add_sentences(doc, lang, text_type)
+    return sents
   if lang == 'en':
     doc = nlp_en(text)
     sents = add_sentences(doc, lang, text_type)
-  return sents
+    return sents
+  else:
+    return [(None, None, None)]
+#l_sents = split_letters_reports_by_sentence(letter_text)
+#save_sents(l_sents, 'letters')
 
-l_sents = split_letters_reports_by_sentence(letter_text)
-save_sents(l_sents, 'letters')
-
+print(report_text)
 r_sents = split_letters_reports_by_sentence(report_text, text_type='REPORT')
-save_sents(r_sents, 'reports')
+print(r_sents)
+#save_sents(r_sents, 'reports')
 
-h_sents = split_hearings_by_sentence(hearing_tuples)
-save_sents(h_sents, 'hearings')
+#h_sents = split_hearings_by_sentence(hearing_tuples)
+#save_sents(h_sents, 'hearings')
