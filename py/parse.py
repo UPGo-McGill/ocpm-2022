@@ -73,7 +73,6 @@ def read_letter_text(LETTER_PATH):
     with open(LETTER_PATH, 'rb') as pdf_file:
         pdf_reader = PyPDF2.PdfReader(pdf_file)
         # Initialize an empty string to store the text content
-        text_content = []
         # Iterate over each page in the PDF
         for page_num in range(len(pdf_reader.pages)):
             page = pdf_reader.pages[page_num]
@@ -81,10 +80,10 @@ def read_letter_text(LETTER_PATH):
             page_text = page.extract_text()
             decoded_text = re.sub("\t\r", '', page_text.encode('utf-8').decode('utf-8'))
             decoded_text = re.sub("-­‐", '-', decoded_text)
-            decoded_text = " ".join(page_text.split())
-            text_content.append(decoded_text)
+            decoded_text = " ".join(decoded_text.split())
+            decoded_text = re.sub("-\\xad‐", '-', decoded_text)
         # Return the text content as a string
-        return text_content
+        return decoded_text
 
 def read_hearing_text(HEARING_PATH):
   with open(HEARING_PATH, "rb") as f:
@@ -113,10 +112,9 @@ def read_hearing_text(HEARING_PATH):
   result = [(r[0].replace(":", "").strip(), r[1]) for r in result]
   return result
 
-#letter_text = read_letter_text(LETTER_PATH)
-#report_text = read_report(REPORT_PATH)
+letter_text = read_letter_text(LETTER_PATH)
+report_text = read_report(REPORT_PATH)
 hearing_tuples = read_hearing_text(HEARING_PATH)
-
 #for ht in hearing_text:
 #  print(ht)
 #  print("\n")
@@ -127,12 +125,13 @@ def detect_lang(text):
   except LangDetectException:
     return None
 
-def add_sentence(idx, doc, lang):
+def add_sentences(doc, lang, idx=''):
   doc_sents = []
   for s in doc.sents:
-    doc_sents.append((idx, s, lang))
-    #print(s)
-    #print("\n")
+    if len(s) > 5:
+      doc_sents.append((idx, s, lang))
+    else:
+      pass
   return doc_sents
 
 def split_hearings_by_sentence(hearing_tuples):
@@ -141,13 +140,31 @@ def split_hearings_by_sentence(hearing_tuples):
     lang = detect_lang(h[1])
     if lang == 'fr':
       doc = nlp_fr(h[1])
-      sents.append(add_sentence(h[0], doc, lang))
+      sents.extend(add_sentences(doc, lang, h[0]))
     if lang == 'en':
       doc = nlp_en(h[1])
-      sents.append(add_sentence(h[0], doc, lang))
+      sents.extend(add_sentences(doc, lang, h[0]))
   return sents
 
+def save_sents(sents):
+  df = pd.DataFrame(sents, columns=['speaker', 'sentence', 'lang'])
+  df.to_csv("data/text_report.csv")
+
+def split_letters_reports_by_sentence(text, text_type='LETTER'):
+  lang = detect_lang(text)
+  if lang == 'fr':
+    doc = nlp_fr(text)
+    sents = add_sentences(doc, lang, text_type)
+  if lang == 'en':
+    doc = nlp_en(text)
+    sents = add_sentences(doc, lang, text_type)
+  return sents
+
+l_sents = split_letters_reports_by_sentence(letter_text)
+save_sents(l_sents)
+
+r_sents = split_letters_reports_by_sentence(report_text, text_type='REPORT')
+save_sents(r_sents)
+
 h_sents = split_hearings_by_sentence(hearing_tuples)
-print(h_sents[:5])
-df = pd.DataFrame(hearing_tuples, columns=['speaker', 'sentence'])
-df.to_csv("data/text_report.csv")
+save_sents(h_sents)
