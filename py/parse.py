@@ -129,7 +129,7 @@ def detect_lang(text):
   except LangDetectException:
     return None
 
-def add_sentences(doc, lang, idx=''):
+def add_hearing_sentences(doc, lang, idx=''):
   doc_sents = []
   for s in doc.sents:
     if len(s) > 5:
@@ -150,30 +150,49 @@ def split_hearings_by_sentence(hearing_tuples):
     if lang == 'en':
       doc = nlp_en(h[1])
       sents.extend(add_sentences(doc, lang, h[0]))
+    else:
+      pass
   return sents
 
 def save_sents(sents, fn):
   df = pd.DataFrame(sents, columns=['speaker', 'sentence', 'lang'])
   df.to_csv(f"data/{fn}.csv")
 
-def split_letters_reports_by_sentence(text, text_type='LETTER'):
+def nlp_based_on_lang(text):
   lang = detect_lang(text)
-  if lang == 'fr':
-    doc = nlp_fr(text)
-    sents = add_sentences(doc, lang, text_type)
-    return sents
   if lang == 'en':
     doc = nlp_en(text)
-    sents = add_sentences(doc, lang, text_type)
-    return sents
+    return doc, lang
+  if lang == 'fr':
+    doc = nlp_fr(text)
+    return doc, lang
   else:
-    return [(None, None, None)]
+    return None, None
+  
+def add_letters_reports_sentences(doc, idx=''):
+  doc_sents = []
+  for s in doc.sents:
+    s, lang = nlp_based_on_lang(s.text)
+    if s is not None:
+      if len(s) > 5:
+        if not s.text.endswith('doc.'):
+          doc_sents.append((idx, s.text, lang))
+      else:
+        pass
+    else:
+      pass
+  return doc_sents
+
+def split_letters_reports_by_sentence(text, text_type='LETTER'):
+  doc, _ = nlp_based_on_lang(text)
+  sents = add_letters_reports_sentences(doc, text_type)
+  return sents
 #l_sents = split_letters_reports_by_sentence(letter_text)
 #save_sents(l_sents, 'letters')
 
-print(report_text)
+#print(report_text)
 r_sents = split_letters_reports_by_sentence(report_text, text_type='REPORT')
-print(r_sents)
+#print(r_sents)
 #save_sents(r_sents, 'reports')
 
 #h_sents = split_hearings_by_sentence(hearing_tuples)
