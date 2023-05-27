@@ -150,9 +150,8 @@ class Parser():
       return doc_sents
     
     def split_letters_reports_by_sentence(self, 
-                                          text:str, 
                                           text_type:str='LETTER'):
-      doc, _ = self._nlp_based_on_lang(text)
+      doc, _ = self._nlp_based_on_lang(self.pages)
       self.sents = self._add_letters_reports_sentences(doc, text_type)
     
     def save_sents(self, fn:str):
