@@ -7,6 +7,8 @@ from bertopic.representation import (
   ZeroShotClassification
 )
 
+
+DATA_PATH = 'data/sample_output'
 # Create your representation model
 #candidate_topics = ["climate", "sustainability", "other"]
 #representation_model = ZeroShotClassification(candidate_topics, model="camembert-base")
@@ -24,7 +26,8 @@ print(len(docs_fr))
 print(len(docs_en))
 
 #print(docs_fr)
-topic_model_fr = BERTopic(language="french", representation_model=representation_model)
+topic_model_fr = BERTopic(language="french", 
+                          representation_model=representation_model)
 topics_fr, probs_fr = topic_model_fr.fit_transform(docs_fr)
 
 print(topic_model_fr.get_topic_info())

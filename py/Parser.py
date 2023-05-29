@@ -157,4 +157,4 @@ class Parser():
     def save_sents(self, fn:str):
       df = pd.DataFrame(self.sents, 
                         columns=['speaker', 'sentence', 'lang'])
-      df.to_csv(f"data/{fn}.csv")
+      df.to_csv(f"output/{fn}.csv")
