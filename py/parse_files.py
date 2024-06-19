@@ -3,7 +3,7 @@ from Parser import Parser
 import os
 
 DATA_PATH = 'data/sample'
-EXCEPTIONS_PATH = 'output/parse_exceptions.txt'
+EXCEPTIONS_PATH = r'output/parse_exceptions.txt'
 
 def print_debug(dtype:str, fn:str, idx:int):
   print(f"Starting on {dtype} {fn} at index {idx}.")

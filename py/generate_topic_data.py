@@ -32,8 +32,9 @@ print(f'There are {len(docs_en)} sentences in English')
 
 def fit_topic_model(lang, rm, vm, docs):
   tm = BERTopic(language=lang, 
-               representation_model=rm,
-               vectorizer_model=vm)
+                representation_model=rm,
+                vectorizer_model=vm,
+                verbose=True)
   topics, probs = tm.fit_transform(docs)
   return tm, topics, probs
 
@@ -47,10 +48,14 @@ def get_topic_df(tm):
       keywords.append(tm.get_topic(idx-1)[:10])
     except:
       print(f"Exception at {idx-1}")
+      keywords.append([])
       exceptions.append(idx-1)
     
   topics_df['keywords'] = keywords
   return topics_df, exceptions
+
+def get_topic_per_doc(docs, topics):
+  return pd.DataFrame({"Document": docs, "Topic": topics})
 
 print("Fitting topic model in French")
 tm_fr, topics_fr, probs_fr = fit_topic_model('french', 
@@ -61,6 +66,10 @@ print("Extracting and saving topics in French")
 topics_fr_df, exceptions_fr =  get_topic_df(tm_fr)
 topics_fr_df.to_csv("output/topics_fr.csv")
 
+print(tm_fr.find_topics('durabilité'))
+doc_topic_fr = get_topic_per_doc(docs_fr, topics_fr)
+doc_topic_fr.to_csv("output/doc_topic_fr.csv")
+
 print("Fitting topic model in English")
 tm_en, topics_en, probs_en = fit_topic_model('english', 
                                              representation_model, 
@@ -69,3 +78,7 @@ tm_en, topics_en, probs_en = fit_topic_model('english',
 print("Extracting and saving topics in English")
 topics_en_df, exceptions_en =  get_topic_df(tm_en)
 topics_en_df.to_csv("output/topics_en.csv")
+
+print(tm_en.find_topics('sustainability'))
+doc_topic_en = get_topic_per_doc(docs_en, topics_en)
+doc_topic_en.to_csv("output/doc_topic_en.csv")

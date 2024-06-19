@@ -8,12 +8,16 @@ from bertopic.representation import (
 )
 
 
-DATA_PATH = 'data/sample_output'
+DATA_PATH = 'data/sample'
 # Create your representation model
 #candidate_topics = ["climate", "sustainability", "other"]
 #representation_model = ZeroShotClassification(candidate_topics, model="camembert-base")
 #representation_model = MaximalMarginalRelevance(diversity=0.3)
 representation_model = KeyBERTInspired()
+
+for idx, path in enumerate(os.scandir(DATA_PATH)):
+    if path.is_file():
+        fn = os.path.basename(path.path)
 
 files = ['letters', 'reports', 'hearings']
 docs_fr = []

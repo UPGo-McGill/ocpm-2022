@@ -10,16 +10,16 @@ LETTER_PATH = f'{DATA_PATH}/{letter_file}'
 HEARING_PATH = f'{DATA_PATH}/{hearing_file}'
 REPORT_PATH = f'{DATA_PATH}/{report_file}'
 
-#hp = Parser(HEARING_PATH)
-#hp.read_hearing()
-#hp.split_hearings_by_sentence()
-#hp.save_sents('hearings')
-#print(hp.speaker_text)
+hp = Parser(HEARING_PATH)
+hp.read_hearing()
+hp.split_hearings_by_sentence()
+hp.save_sents('hearings')
+print(hp.speaker_text)
 
-#lp = Parser(LETTER_PATH)
-#lp.read_letter()
-#lp.split_letters_reports_by_sentence()
-#lp.save_sents('letters')
+lp = Parser(LETTER_PATH)
+lp.read_letter()
+lp.split_letters_reports_by_sentence()
+lp.save_sents('letters')
 
 #print(lp.pages)
 
