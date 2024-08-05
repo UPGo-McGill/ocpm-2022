@@ -21,7 +21,7 @@ class Parser():
             self.pdf = pdftotext.PDF(f)
         self.pages = ""
         self.fn = f"{doc_type}_{PATH.name.split('.')[0]}"
-        print(self.fn)
+        #print(self.fn)
         
     def read_report(self) -> str:
         def _remove_linebreaks(pattern:str) -> str:
@@ -108,13 +108,15 @@ class Parser():
         self.sents = []
         for h in self.speaker_text:
             lang = self._detect_lang(h[1])
-        if lang == 'fr':
-            doc = nlp_fr(h[1])
-            self.sents.extend(self._add_hearing_sentences(doc, lang, h[0]))
-        if lang == 'en':
-            doc = nlp_en(h[1])
-            self.sents.extend(self._add_hearing_sentences(doc, lang, h[0]))
-        else:
+        try:
+            if lang == 'fr':
+                doc = nlp_fr(h[1])
+                self.sents.extend(self._add_hearing_sentences(doc, lang, h[0]))
+            if lang == 'en':
+                doc = nlp_en(h[1])
+                self.sents.extend(self._add_hearing_sentences(doc, lang, h[0]))
+        except:
+            print("No language found, sentence skipped")
             pass
 
     def _nlp_based_on_lang(self, text:str) -> Optional[Tuple[Doc, str]]:
