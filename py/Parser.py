@@ -14,6 +14,9 @@ import spacy
 nlp_fr = spacy.load("fr_core_news_sm")
 nlp_en = spacy.load("en_core_web_sm")
 
+nlp_fr.max_length = 2500000
+nlp_en.max_length = 2500000
+
 class Parser():
     def __init__(self, PATH:str, doc_type:str):
         #self.PATH = PATH
