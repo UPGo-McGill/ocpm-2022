@@ -10,11 +10,15 @@ from langchain_community.document_loaders import Docx2txtLoader
 from langchain_community.vectorstores import Chroma
 from langchain_openai import ChatOpenAI
 from langchain_openai import OpenAIEmbeddings
+from tqdm import tqdm
 
-from prompt_utils import *
+from prompt_utils import return_RAG_chain, return_chain, pipe, add_RAG_output_to_data
+from sampling_utils import sample_sents_for_RAG
 
-DATA_PATH = 'data/'
+sampled_sents = sample_sents_for_RAG()
+print(sampled_sents)
 RAG_PATH = 'data/RAG_resources/'
+RAG_OUT_PATH = 'output/RAG_samples/'
 load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
@@ -28,20 +32,6 @@ with open(f'{RAG_PATH}gg_template.txt', 'r') as f:
     
 with open(f'{RAG_PATH}climate_template.txt', 'r') as f:
     climate_template = f.read()
-
-for idx, path in enumerate(os.scandir(DATA_PATH)):
-    if path.is_file():
-        fn = os.path.basename(path.path)
-
-files = ['letters', 'reports', 'hearings']
-docs_fr = []
-docs_en = []
-for f in files:
-    df = pd.read_csv(f'{DATA_PATH}{f}.csv')
-    docs_fr.extend(df[df.lang == 'fr'].sentence.tolist())
-    docs_en.extend(df[df.lang == 'en'].sentence.tolist())
-print(len(docs_fr))
-print(len(docs_en))
 
 # RAG
 loader = Docx2txtLoader(f'{RAG_PATH}green_gray.docx')
@@ -65,5 +55,11 @@ sus_chain = return_RAG_chain(sus_template, retriever, llm)
 gg_chain = return_RAG_chain(gg_template, retriever, llm)
 climate_chain = return_chain(climate_template, llm)
 
-for e in examples['green']:
-    print(pipe(e, sus_chain, gg_chain, climate_chain))
+RAG_outputs = []
+for sent in sampled_sents['sentence'][:5]:
+    print(sent)
+    RAG_outputs.append(
+        pipe(sent, sus_chain, gg_chain, climate_chain))
+
+sample_with_RAG = add_RAG_output_to_data(sampled_sents[:5], RAG_outputs)
+print(sample_with_RAG)

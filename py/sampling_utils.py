@@ -26,6 +26,9 @@ def sample_sents_for_RAG(fn:str=SENT_FN,
         lambda x: x.sample(frac=sample_frac))
     for idx in sampled_sents['idx']:
         append_sample_index(idx)
-    return sampled_sents
+    return sampled_sents.reset_index(drop=True)
 
-sample_sents_for_RAG()
+def save_RAG_outputs():
+    pass    
+#sampled_sents = sample_sents_for_RAG()
+#print(sampled_sents.reset_index(drop=True))
