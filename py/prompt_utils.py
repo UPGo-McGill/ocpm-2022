@@ -3,7 +3,9 @@ from langchain.schema.runnable import RunnablePassthrough
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables.base import RunnableSequence
 
-from typing import Tuple
+from typing import List, Tuple
+
+import pandas as pd
 
 # Create function to make sure retriever has access to all docs
 def join_docs(docs:list):
@@ -36,3 +38,8 @@ def pipe(sentence:str,
     else:
         return [sus.lower().strip(),
                 climate.lower().strip()]
+
+def add_RAG_output_to_data(sample_df:pd.DataFrame, RAGs:List[Tuple[str,str]]):
+    RAG_columns = pd.DataFrame(RAGs, columns=["sus","climate"])
+    sample_df = pd.concat([sample_df, RAG_columns], axis=1)
+    return sample_df
