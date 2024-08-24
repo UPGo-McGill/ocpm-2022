@@ -111,16 +111,17 @@ class Parser():
         self.sents = []
         for h in self.speaker_text:
             lang = self._detect_lang(h[1])
-        try:
-            if lang == 'fr':
-                doc = nlp_fr(h[1])
-                self.sents.extend(self._add_hearing_sentences(doc, lang, h[0]))
-            if lang == 'en':
-                doc = nlp_en(h[1])
-                self.sents.extend(self._add_hearing_sentences(doc, lang, h[0]))
-        except:
-            print("No language found, sentence skipped")
-            pass
+            try:
+                if lang == 'fr':
+                    doc = nlp_fr(h[1])
+                    #print(doc.text)
+                    self.sents.extend(self._add_hearing_sentences(doc, lang, h[0]))
+                if lang == 'en':
+                    doc = nlp_en(h[1])
+                    self.sents.extend(self._add_hearing_sentences(doc, lang, h[0]))
+            except:
+                print("No language found, sentence skipped")
+                pass
 
     def _nlp_based_on_lang(self, text:str) -> Optional[Tuple[Doc, str]]:
         lang = self._detect_lang(text)
@@ -156,5 +157,6 @@ class Parser():
         self.sents = self._add_letters_reports_sentences(doc, text_type)
     
     def save_sents(self, fn:str):
+        #print(self.sents)
         df = pd.DataFrame(self.sents, columns=['file','speaker', 'sentence', 'lang'])
         df.to_csv(f"output/{fn}.csv")

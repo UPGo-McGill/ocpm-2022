@@ -52,7 +52,7 @@ print(f"There were {sum(sentences.values())} sentences in total.")
 print(f"The sentences were distributed as follows:")
 print(sentences)
 
-print(f"The sentence lengths were distributed as follows:")
+print(f"The mean sentence lengths were distributed as follows:")
 print(mean_sent_lens)
 
 print(f"There were {sum(exceptions.values())} exceptions in total.")
