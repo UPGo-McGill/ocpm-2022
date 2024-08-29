@@ -1,8 +1,9 @@
+import copy
 import json
 import numpy as np
 import pandas as pd
 
-from typing import Dict
+from typing import Dict, List
 
 LOG_FN = "output/logs/RAG_sampled_indexes.txt"
 LOG_SENT_FN = "output/logs/RAG_sampled_sents.txt"
@@ -52,13 +53,23 @@ def RAG_outputs_to_csv(sample_df:pd.DataFrame,
                      ROOT:str= f"output/RAG_samples/"):
     sample_df.to_csv(f"output/RAG_samples/{name}")
 
-def RAG_outputs_to_jsonl(sample_df:pd.DataFrame,
+def df_to_batches(df:pd.DataFrame, n:int=10) -> List[pd.DataFrame]:
+    list_df = [df[i:i+n] for i in range(0, copy.deepcopy(df).shape[0],n)]
+    return list_df
+
+def RAG_outputs_to_jsonl(idx:int,
+                         sample_df:pd.DataFrame,
                          name:str):
     to_jsonl = []
     for idx, row in sample_df.iterrows():
         item = process_item(row)
         to_jsonl.append(item)
-    with open(f"output/RAG_samples/{name}", 'w') as f:
+    if idx == 0:
+        write_mode = 'w'
+    else:
+        write_mode = 'a'
+        
+    with open(f"output/RAG_samples/{name}", write_mode) as f:
         for item in to_jsonl:
             f.write(json.dumps(item) + "\n")
 
