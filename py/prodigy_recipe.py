@@ -8,11 +8,11 @@ import prodigy
 import spacy
 
 @prodigy.recipe(
-    "sentiment",
+    "green_grey_climate",
     dataset=Arg(help="Dataset to save answers to."),
     file_path=Arg(help="Path to texts")
 )
-def sentiment(dataset: str, file_path: Path, lang:str="en"):
+def green_grey_climate(dataset: str, file_path: Path, lang:str="en"):
     """Annotate the sentiment of texts using different mood options."""
     blocks = [
         {"view_id": "ner_manual"},
@@ -37,9 +37,9 @@ def add_options(stream):
     # Helper function to add options to every task in a stream
     
     options = [
-        {"id": "happy", "text": "green"},
-        {"id": "sad", "text": "grey"},
-        {"id": "angry", "text": "climate"},
+        {"id": "green", "text": "Green"},
+        {"id": "grey", "text": "Grey"},
+        {"id": "climate", "text": "Climate"},
     ]
     for task in stream:
         task["options"] = options
