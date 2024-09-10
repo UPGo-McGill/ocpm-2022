@@ -30,7 +30,7 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 # Sample sentences
 sample_name = sys.argv[1]
-sample_size = 0.005
+sample_size = 0.035
 sampled_sents = sample_sents_for_RAG(sample_frac=sample_size)
 print(sampled_sents)
 
