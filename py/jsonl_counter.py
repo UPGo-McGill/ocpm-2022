@@ -13,14 +13,19 @@ green = 0
 grey = 0
 climate = 0
 other = 0
+total = 0
 for item in items:
-    if item['meta']['Green_Grey']=='grey':
-        grey += 1
-    if item['meta']['Green_Grey']=='green':
-        green += 1
+    if item['meta']['Green_Grey']!='no':
+        if item['meta']['Green_Grey']=='green':
+            green += 1
+        elif item['meta']['Green_Grey']=='grey':
+            grey += 1
     if item['meta']['Climate']=='yes':
         climate += 1
-    else:
+    if item['meta']['Climate']=='no' and\
+       item['meta']['Green_Grey']=='no':
         other += 1
+    total += 1
 
-print(f"Green: {green}\nGreey: {grey}\nClimate: {climate}\nOther: {other}")
+print(f"Green: {green}\nGrey: {grey}\nClimate: {climate}\
+\nOther: {other}\nTotal {total}")
